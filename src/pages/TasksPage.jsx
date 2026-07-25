@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import TaskSidebar      from "../components/tasks/TaskSidebar";
-import TaskHeader       from "../components/tasks/TaskHeader";
-import TaskFilters      from "../components/tasks/TaskFilters";
-import TaskListSection  from "../components/tasks/TaskListSection";
-import RightPanel       from "../components/tasks/RightPanel";
+import TaskSidebar from "../components/tasks/TaskSidebar";
+import TaskHeader from "../components/tasks/TaskHeader";
+import TaskFilters from "../components/tasks/TaskFilters";
+import TaskListSection from "../components/tasks/TaskListSection";
+import RightPanel from "../components/tasks/RightPanel";
 
 import { INITIAL_TASKS_FULL } from "../lib/constants";
-import { formatShortDate }    from "../lib/dateUtils";
+import { formatShortDate } from "../lib/dateUtils";
 
 export default function TasksPage() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -21,7 +21,7 @@ export default function TasksPage() {
 
   /* ── derived lists: MOVE, not duplicate ── */
   const pending = tasks.filter((t) => !t.completed);
-  const done    = tasks.filter((t) => t.completed);
+  const done = tasks.filter((t) => t.completed);
 
   const todayStr = formatShortDate(new Date());
 

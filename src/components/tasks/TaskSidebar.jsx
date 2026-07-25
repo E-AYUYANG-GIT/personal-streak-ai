@@ -1,31 +1,41 @@
 import AvatarCard from "../home/AvatarCard";
+import useUIStore from "../../store/uiStore";
+import { Home, CheckSquare, BookOpen, BarChart2, Settings } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Home",     icon: "🏠", active: false },
-  { label: "Tasks",    icon: "☰", active: true  },
-  { label: "Journal",  icon: "📓", active: false },
-  { label: "Progress", icon: "📊", active: false },
-  { label: "Settings", icon: "⚙️", active: false },
+  { label: "Home",     Icon: Home,       navIdx: 0 },
+  { label: "Tasks",    Icon: CheckSquare, navIdx: 1 },
+  { label: "Journal",  Icon: BookOpen,   navIdx: 2 },
+  { label: "Progress", Icon: BarChart2,  navIdx: 3 },
+  { label: "Settings", Icon: Settings,   navIdx: 4 },
 ];
 
 export default function TaskSidebar() {
+  const { activeNav, setActiveNav } = useUIStore();
+
   return (
     <aside className="tp-sidebar">
       <AvatarCard name="Elizar" />
 
-      <nav className="tp-nav">
-        {NAV_ITEMS.map((item) => (
-          <div
-            key={item.label}
-            className={`tp-nav-item ${item.active ? "tp-nav-active" : ""}`}
-          >
-            <span className="tp-nav-icon">{item.icon}</span>
-            <span className="tp-nav-label">{item.label}</span>
-          </div>
-        ))}
-      </nav>
+      <div className="card tp-nav-card">
+        <nav className="tp-nav">
+          {NAV_ITEMS.map(({ label, Icon, navIdx }) => {
+            const isActive = activeNav === navIdx;
+            return (
+              <div
+                key={label}
+                className={`tp-nav-item ${isActive ? "tp-nav-active" : ""}`}
+                onClick={() => setActiveNav(navIdx)}
+              >
+                <Icon size={18} />
+                <span className="tp-nav-label">{label}</span>
+              </div>
+            );
+          })}
+        </nav>
+      </div>
 
-      <div className="tp-focus">
+      <div className="card tp-focus">
         <p className="tp-focus-text">
           Small steps everyday lead to big results.
         </p>
@@ -35,4 +45,4 @@ export default function TaskSidebar() {
       <div className="tp-greeting">Good morning, Elizar! ☀️</div>
     </aside>
   );
-}
+}
