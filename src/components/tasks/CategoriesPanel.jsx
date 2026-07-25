@@ -7,7 +7,7 @@ export default function CategoriesPanel({ tasks }) {
   }));
 
   return (
-    <div className="tp-categories">
+    <div className="card tp-categories">
       <h3 className="tp-card-title">Categories</h3>
       {counts.map((cat) => {
         const Icon = cat.icon;

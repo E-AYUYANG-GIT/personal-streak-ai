@@ -9,7 +9,7 @@ const QUICK_FILTERS = [
 
 export default function QuickFiltersPanel() {
   return (
-    <div className="tp-quick-filters">
+    <div className="card tp-quick-filters">
       <h3 className="tp-card-title">Quick Filters</h3>
       {QUICK_FILTERS.map((qf) => {
         const Icon = qf.icon;
