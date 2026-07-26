@@ -1,30 +1,51 @@
 import { Bell, Clock } from "lucide-react";
-import SettingToggle from "./SettingToggle";
+import { NOTIFICATION_TOGGLES, REMINDER_TIMES } from "../../lib/constants";
+import useSettingsStore from "../../store/settingsStore";
+import SettingsToggle from "./SettingsToggle";
+import SettingsSelect from "./SettingsSelect";
 
 export default function NotificationsCard() {
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <Bell size={16} color="#8B5E3C" />
-                <span className="sp-card-header-title">Notifications</span>
-            </div>
+  const store = useSettingsStore();
 
-            <div className="sp-card-body">
-                <SettingToggle label="Daily Reminder" icon={Bell} defaultOn />
-                <SettingToggle label="Journal Reminder" icon={Bell} defaultOn />
-                <SettingToggle label="Habit Reminder" icon={Bell} defaultOn />
+  const setters = {
+    dailyReminder:   store.setDailyReminder,
+    journalReminder: store.setJournalReminder,
+    habitReminder:   store.setHabitReminder,
+  };
 
-                <div className="sp-reminder-time">
-                    <Clock size={16} color="#8B5E3C" />
-                    <span className="sp-reminder-label">Reminder Time</span>
-                    <select className="sp-reminder-select">
-                        <option>08:00 PM</option>
-                        <option>09:00 PM</option>
-                        <option>10:00 PM</option>
-                        <option>07:00 AM</option>
-                    </select>
-                </div>
-            </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Bell size={16} color="var(--text-sub)" />
+        Notifications
+      </div>
+
+      {/* Notification toggles */}
+      {NOTIFICATION_TOGGLES.map(({ key, label, Icon }) => (
+        <div key={key} className="st-row">
+          <div className="st-row-icon-label">
+            <Icon size={14} color="var(--text-muted)" />
+            <span className="st-row-label">{label}</span>
+          </div>
+          <SettingsToggle
+            checked={store[key]}
+            onChange={(v) => setters[key](v)}
+          />
         </div>
-    );
+      ))}
+
+      {/* Reminder time */}
+      <div className="st-row" style={{ marginTop: 6 }}>
+        <div className="st-row-icon-label">
+          <Clock size={14} color="var(--text-muted)" />
+          <span className="st-row-label">Reminder Time</span>
+        </div>
+        <SettingsSelect
+          value={store.reminderTime}
+          options={REMINDER_TIMES}
+          onChange={store.setReminderTime}
+        />
+      </div>
+    </div>
+  );
 }

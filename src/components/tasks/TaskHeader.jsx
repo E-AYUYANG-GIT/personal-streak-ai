@@ -1,20 +1,26 @@
 import { Search, Plus } from "lucide-react";
 
-export default function TaskHeader() {
+export default function TaskHeader({ onAddTask }) {
   return (
-    <header className="tp-header">
+    <div className="tk-header">
       <div>
-        <h1 className="tp-title">Tasks</h1>
-        <p className="tp-subtitle">Stay focused and get things done.</p>
+        <h1 className="pg-page-title">Tasks</h1>
+        <p className="pg-page-sub">Stay focused and get things done.</p>
       </div>
-      <div className="tp-header-actions">
-        <button className="tp-icon-btn" aria-label="Search tasks">
-          <Search size={18} color="#8B5E3C" />
-        </button>
-        <button className="tp-add-btn">
-          <Plus size={16} /> Add Task
+      <div className="tk-header-actions">
+        <div className="tk-search-wrap">
+          <Search size={14} color="var(--text-muted)" className="tk-search-icon" />
+          <input
+            className="tk-search"
+            type="text"
+            placeholder="Search tasks..."
+          />
+        </div>
+        <button className="add-task-btn tk-add-btn" onClick={onAddTask}>
+          <Plus size={15} />
+          Add Task
         </button>
       </div>
-    </header>
+    </div>
   );
 }

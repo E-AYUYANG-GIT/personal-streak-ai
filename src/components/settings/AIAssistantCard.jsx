@@ -1,28 +1,46 @@
-import { Bot, Lightbulb, BarChart3, Star, Zap, Trash2 } from "lucide-react";
-import SettingToggle from "./SettingToggle";
+import { Bot, Trash2 } from "lucide-react";
+import { AI_TOGGLES } from "../../lib/constants";
+import useSettingsStore from "../../store/settingsStore";
+import SettingsToggle from "./SettingsToggle";
 
 export default function AIAssistantCard() {
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <Bot size={16} color="#8B5E3C" />
-                <span className="sp-card-header-title">AI Assistant</span>
-            </div>
+  const store = useSettingsStore();
 
-            <div className="sp-card-body">
-                <SettingToggle label="Generate Reflection Prompt" icon={Lightbulb} defaultOn />
-                <SettingToggle label="Weekly Insight" icon={BarChart3} defaultOn />
-                <SettingToggle label="Daily Motivation" icon={Star} defaultOn />
+  const setters = {
+    generateReflectionPrompt: store.setGenerateReflectionPrompt,
+    weeklyInsight:            store.setWeeklyInsight,
+    dailyMotivation:          store.setDailyMotivation,
+  };
 
-                <div className="sp-ai-actions">
-                    <button className="sp-ai-test-btn">
-                        <Zap size={14} /> Test AI Connection
-                    </button>
-                    <button className="sp-ai-clear-btn">
-                        <Trash2 size={14} /> Clear AI Cache
-                    </button>
-                </div>
-            </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Bot size={16} color="#5B8DEF" />
+        AI Assistant
+      </div>
+
+      {/* AI feature toggles */}
+      {AI_TOGGLES.map(({ key, label, Icon }) => (
+        <div key={key} className="st-row">
+          <div className="st-row-icon-label">
+            <Icon size={14} color="var(--text-muted)" />
+            <span className="st-row-label">{label}</span>
+          </div>
+          <SettingsToggle
+            checked={store[key]}
+            onChange={(v) => setters[key](v)}
+          />
         </div>
-    );
+      ))}
+
+      {/* Action buttons */}
+      <div className="st-ai-actions">
+        <button className="st-ai-test-btn">Test AI Connection</button>
+        <button className="st-ai-clear-btn">
+          <Trash2 size={13} />
+          Clear AI Cache
+        </button>
+      </div>
+    </div>
+  );
 }

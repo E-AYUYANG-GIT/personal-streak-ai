@@ -2,7 +2,8 @@ import {
   Home, CheckSquare, BookOpen, BarChart2, Settings,
   Heart, BookMarked, FileText, CalendarDays, Sparkles,
   BarChart, Layers, GitCommitHorizontal, GraduationCap,
-  Code2, Briefcase, Target,
+  Code2, Briefcase, Target, Bell, Flame,
+  Lightbulb, Star, GitBranch
 } from "lucide-react";
 
 /* ─────────────────────────────────────────
@@ -154,3 +155,78 @@ export const MILESTONES = [
   { icon: "📓", label: "Wrote 25 Journal Entries", when: "Last Week", bg: "#EDE8FB" },
   { icon: "🎯", label: "22 Focus Days", when: "This Month", bg: "#DBEAFE" },
 ];
+
+/* ─────────────────────────────────────────
+   SETTINGS — APPEARANCE
+───────────────────────────────────────── */
+export const THEME_OPTIONS = [
+  { value: "light",  label: "Light",  icon: "☀️" },
+  { value: "system", label: "System", icon: "🖥️" },
+  { value: "dark",   label: "Dark",   icon: "🌙" },
+];
+ 
+export const ACCENT_COLORS = [
+  "#C07F55",  // brown  (default)
+  "#5B8DEF",  // blue
+  "#4ADE80",  // green
+  "#8B6FE8",  // purple
+  "#F472B6",  // pink
+];
+ 
+/* ─────────────────────────────────────────
+   SETTINGS — CHARACTER & STICKERS
+───────────────────────────────────────── */
+export const STICKER_STYLES = [
+  { value: "classic", label: "Classic", emoji: "🧑‍💻" },
+  { value: "pastel",  label: "Pastel",  emoji: "👦"   },
+  { value: "pixel",   label: "Pixel",   emoji: "🕹️"  },
+  { value: "outline", label: "Outline", emoji: "🫥"   },
+];
+ 
+export const CHARACTER_TOGGLES = [
+  { key: "enableCharacter",       label: "Enable Character"       },
+  { key: "showSpeechBubble",      label: "Show Speech Bubble"     },
+  { key: "celebrationAnimations", label: "Celebration Animations" },
+];
+ 
+/* ─────────────────────────────────────────
+   SETTINGS — NOTIFICATIONS
+───────────────────────────────────────── */
+export const NOTIFICATION_TOGGLES = [
+  { key: "dailyReminder",   label: "Daily Reminder",   Icon: Bell     },
+  { key: "journalReminder", label: "Journal Reminder", Icon: BookOpen },
+  { key: "habitReminder",   label: "Habit Reminder",   Icon: Flame    },
+];
+ 
+export const REMINDER_TIMES = [
+  "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
+  "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM",
+];
+ 
+/* ─────────────────────────────────────────
+   SETTINGS — PRODUCTIVITY
+───────────────────────────────────────── */
+export const DAILY_GOAL_OPTIONS = ["3 Tasks", "5 Tasks", "7 Tasks", "10 Tasks", "Custom"];
+export const HOME_PAGE_OPTIONS  = ["Home", "Tasks", "Journal", "Progress"];
+export const START_WEEK_OPTIONS = ["Monday", "Sunday", "Saturday"];
+ 
+/* ─────────────────────────────────────────
+   SETTINGS — AI ASSISTANT
+───────────────────────────────────────── */
+export const AI_TOGGLES = [
+  { key: "generateReflectionPrompt", label: "Generate Reflection Prompt", Icon: Lightbulb },
+  { key: "weeklyInsight",            label: "Weekly Insight",             Icon: BarChart2 },
+  { key: "dailyMotivation",          label: "Daily Motivation",           Icon: Star      },
+];
+ 
+/* ─────────────────────────────────────────
+   SETTINGS — ABOUT
+───────────────────────────────────────── */
+export const TECH_BADGES = ["React Native", "Tauri", "SQLite"];
+ 
+export const ABOUT_LINKS = [
+  { label: "GitHub",         icon: "🐙" },
+  { label: "Privacy Policy", icon: "🔒" },
+  { label: "License",        icon: "📄" },
+];
+ 

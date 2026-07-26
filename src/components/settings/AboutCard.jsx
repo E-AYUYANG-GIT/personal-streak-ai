@@ -1,45 +1,62 @@
-import { GitBranchIcon, ShieldCheck, FileText } from "lucide-react";
-import appIcon from "/journal.png";
+import { Info, GitBranch, Shield, FileText, ExternalLink } from "lucide-react";
+import { TECH_BADGES, ABOUT_LINKS } from "../../lib/constants";
 
-const TECH_BADGES = ["React Native", "Tauri", "SQLite"];
+// 1. Map all potential labels from ABOUT_LINKS to icons
+const LINK_ICONS = {
+  "GitHub": GitBranch,
+  "GitHub Repository": GitBranch,
+  "GitBranch": GitBranch,
+  "Privacy Policy": Shield,
+  "License": FileText,
+};
 
 export default function AboutCard() {
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <span className="sp-card-header-title">ℹ️ About</span>
-            </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Info size={16} color="var(--text-sub)" />
+        About
+      </div>
 
-            <div className="sp-about-body">
-                <div className="sp-about-header">
-                    <img src={appIcon} alt="App" className="sp-about-icon" />
-                    <div>
-                        <h3 className="sp-about-name">Personal Streak AI</h3>
-                        <p className="sp-about-version">Version 1.0.0</p>
-                    </div>
-                </div>
-
-                <div className="sp-about-built">
-                    <span className="sp-about-built-label">Built with</span>
-                    <div className="sp-about-badges">
-                        {TECH_BADGES.map((badge) => (
-                            <span key={badge} className="sp-about-badge">{badge}</span>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="sp-about-links">
-                    <a href="#" className="sp-about-link">
-                        <GitBranchIcon size={14} /> GitHub
-                    </a>
-                    <a href="#" className="sp-about-link">
-                        <ShieldCheck size={14} /> Privacy Policy
-                    </a>
-                    <a href="#" className="sp-about-link">
-                        <FileText size={14} /> License
-                    </a>
-                </div>
-            </div>
+      {/* App identity */}
+      <div className="st-about-row">
+        <div className="st-about-app-icon">📖</div>
+        <div>
+          <p className="st-about-app-name">Personal Streak AI</p>
+          <p className="st-about-version">Version 1.0.0</p>
         </div>
-    );
+      </div>
+
+      {/* Tech badges */}
+      <p className="st-field-label" style={{ marginTop: 14 }}>
+        Built with
+      </p>
+      <div className="st-tech-badges">
+        {TECH_BADGES.map((badge) => (
+          <span key={badge} className="st-tech-badge">
+            {badge}
+          </span>
+        ))}
+      </div>
+
+      {/* Links */}
+      <div className="st-about-links">
+        {ABOUT_LINKS.map(({ label, url }) => {
+          // 2. Fallback to ExternalLink if label isn't in LINK_ICONS (prevents React crashes)
+          const IconComponent = LINK_ICONS[label] || ExternalLink;
+
+          return (
+            <button
+              key={label}
+              className="st-about-link-btn"
+              onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
+            >
+              <IconComponent size={13} color="var(--text-muted)" />
+              {label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }

@@ -1,89 +1,75 @@
-import { useState } from "react";
-import { Monitor, Sun, Moon } from "lucide-react";
+import { Palette, Sun, Monitor, Moon } from "lucide-react";
+import { THEME_OPTIONS, ACCENT_COLORS } from "../../lib/constants";
+import useSettingsStore from "../../store/settingsStore";
 
-const THEMES = [
-    { key: "light", label: "Light", icon: Sun },
-    { key: "system", label: "System", icon: Monitor },
-    { key: "dark", label: "Dark", icon: Moon },
-];
-
-const ACCENTS = [
-    { key: "brown", color: "#8B5E3C" },
-    { key: "blue", color: "#60A5FA" },
-    { key: "green", color: "#4ADE80" },
-    { key: "purple", color: "#A78BFA" },
-    { key: "pink", color: "#F472B6" },
-];
+const THEME_ICONS = { light: Sun, system: Monitor, dark: Moon };
 
 export default function AppearanceCard() {
-    const [theme, setTheme] = useState("system");
-    const [accent, setAccent] = useState("brown");
-    const [scale, setScale] = useState(100);
+  const { theme, setTheme, accentColor, setAccentColor, windowScale, setWindowScale } =
+    useSettingsStore();
 
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <Monitor size={16} color="#8B5E3C" />
-                <span className="sp-card-header-title">Appearance</span>
-            </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Palette size={16} color="var(--text-sub)" />
+        Appearance
+      </div>
 
-            <div className="sp-appearance-body">
-                {/* Theme */}
-                <div className="sp-appearance-section">
-                    <span className="sp-appearance-label">Theme</span>
-                    <div className="sp-theme-options">
-                        {THEMES.map((t) => {
-                            const Icon = t.icon;
-                            return (
-                                <button
-                                    key={t.key}
-                                    className={`sp-theme-btn ${theme === t.key ? "sp-theme-active" : ""}`}
-                                    onClick={() => setTheme(t.key)}
-                                >
-                                    <Icon size={16} />
-                                    <span>{t.label}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                {/* Accent Color */}
-                <div className="sp-appearance-section">
-                    <span className="sp-appearance-label">Accent Color</span>
-                    <div className="sp-accent-options">
-                        {ACCENTS.map((a) => (
-                            <button
-                                key={a.key}
-                                className={`sp-accent-circle ${accent === a.key ? "sp-accent-active" : ""}`}
-                                style={{ background: a.color }}
-                                onClick={() => setAccent(a.key)}
-                                aria-label={`Accent ${a.key}`}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                {/* Window Scale */}
-                <div className="sp-appearance-section">
-                    <div className="sp-scale-header">
-                        <Monitor size={16} color="#8B5E3C" />
-                        <span className="sp-appearance-label">Window Scale</span>
-                        <span className="sp-scale-letter">A</span>
-                    </div>
-                    <div className="sp-scale-row">
-                        <input
-                            type="range"
-                            min={80}
-                            max={120}
-                            value={scale}
-                            onChange={(e) => setScale(Number(e.target.value))}
-                            className="sp-scale-slider"
-                        />
-                        <span className="sp-scale-value">{scale}%</span>
-                    </div>
-                </div>
-            </div>
+      {/* Theme + Accent Color row */}
+      <div className="st-appearance-row">
+        {/* Theme selector */}
+        <div className="st-field-group">
+          <p className="st-field-label">Theme</p>
+          <div className="st-theme-pills">
+            {THEME_OPTIONS.map(({ value, label }) => {
+              const Icon = THEME_ICONS[value];
+              return (
+                <button
+                  key={value}
+                  className={`st-theme-pill${theme === value ? " active" : ""}`}
+                  onClick={() => setTheme(value)}
+                >
+                  <Icon size={13} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
         </div>
-    );
+
+        {/* Accent color swatches */}
+        <div className="st-field-group">
+          <p className="st-field-label">Accent Color</p>
+          <div className="st-accent-row">
+            {ACCENT_COLORS.map((color) => (
+              <button
+                key={color}
+                className={`st-accent-swatch${accentColor === color ? " active" : ""}`}
+                style={{ background: color }}
+                onClick={() => setAccentColor(color)}
+                aria-label={`Accent color ${color}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Window Scale slider */}
+      <div className="st-scale-row">
+        <div className="st-scale-label-row">
+          <Monitor size={14} color="var(--text-muted)" />
+          <span className="st-field-label" style={{ marginBottom: 0 }}>Window Scale</span>
+        </div>
+        <span className="st-scale-min">A</span>
+        <input
+          type="range"
+          min={50} max={150} step={5}
+          value={windowScale}
+          onChange={(e) => setWindowScale(Number(e.target.value))}
+          className="st-slider"
+        />
+        <span className="st-scale-pct">{windowScale}%</span>
+      </div>
+    </div>
+  );
 }

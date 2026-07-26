@@ -1,22 +1,12 @@
-const FILTERS = [
-  { key: "all",       label: "All"       },
-  { key: "today",     label: "Today"     },
-  { key: "upcoming",  label: "Upcoming"  },
-  { key: "completed", label: "Completed" },
-];
+import { Search, Plus } from "lucide-react";
 
-export default function TaskFilters({ active, onChange }) {
+export default function TaskHeader({ onAddTask }) {
   return (
-    <div className="tp-filters">
-      {FILTERS.map((f) => (
-        <button
-          key={f.key}
-          className={`tp-filter-pill ${active === f.key ? "tp-filter-active" : ""}`}
-          onClick={() => onChange(f.key)}
-        >
-          {f.label}
+    <div className="tk-header">
+        <button className="add-task-btn tk-add-btn" onClick={onAddTask}>
+          <Plus size={15} />
+          Add Task
         </button>
-      ))}
     </div>
   );
 }
