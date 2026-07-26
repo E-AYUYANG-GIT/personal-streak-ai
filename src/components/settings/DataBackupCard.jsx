@@ -1,34 +1,45 @@
-import { Cloud, Download, Upload, Database, RotateCcw, Trash2 } from "lucide-react";
+import { Cloud, Download, Upload, RefreshCw, Trash2 } from "lucide-react";
+
+const PRIMARY_ACTIONS = [
+  { Icon: Download,  label: "Export Data",  color: "#4ADE80", bg: "#DCFCE7" },
+  { Icon: Upload,    label: "Import Data",  color: "#60A5FA", bg: "#DBEAFE" },
+  { Icon: Cloud,     label: "Backup Data",  color: "#F59E0B", bg: "#FEF3C7" },
+];
 
 export default function DataBackupCard() {
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <Cloud size={16} color="#8B5E3C" />
-                <span className="sp-card-header-title">Data & Backup</span>
-            </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Cloud size={16} color="var(--text-sub)" />
+        Data &amp; Backup
+      </div>
 
-            <div className="sp-card-body">
-                <div className="sp-data-row">
-                    <button className="sp-data-btn">
-                        <Download size={14} /> Export Data
-                    </button>
-                    <button className="sp-data-btn">
-                        <Upload size={14} /> Import Data
-                    </button>
-                    <button className="sp-data-btn">
-                        <Database size={14} /> Backup Data
-                    </button>
-                </div>
-                <div className="sp-data-row">
-                    <button className="sp-data-btn sp-data-btn--secondary">
-                        <RotateCcw size={14} /> Restore Data
-                    </button>
-                    <button className="sp-data-btn sp-data-btn--danger">
-                        <Trash2 size={14} /> Reset App Data
-                    </button>
-                </div>
+      {/* Primary actions row */}
+      <div className="st-data-primary">
+        {PRIMARY_ACTIONS.map(({ Icon, label, color, bg }) => (
+          <button key={label} className="st-data-btn">
+            <div className="st-data-btn-icon" style={{ background: bg }}>
+              <Icon size={15} color={color} />
             </div>
-        </div>
-    );
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Divider */}
+      <div className="st-divider" />
+
+      {/* Danger actions row */}
+      <div className="st-data-secondary">
+        <button className="st-data-ghost">
+          <RefreshCw size={14} color="var(--text-muted)" />
+          Restore Data
+        </button>
+        <button className="st-data-danger">
+          <Trash2 size={14} />
+          Reset App Data
+        </button>
+      </div>
+    </div>
+  );
 }

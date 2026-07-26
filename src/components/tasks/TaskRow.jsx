@@ -1,67 +1,71 @@
-import { Clock, Flame, CheckCircle2, Circle } from "lucide-react";
+import { Clock, CheckCircle2, Flame } from "lucide-react";
 import { CATEGORIES, PRIORITY_STYLES } from "../../lib/constants";
+import useTasksStore from "../../store/tasksStore";
 
-function CategoryBadge({ categoryKey }) {
-  const cat = CATEGORIES.find((c) => c.key === categoryKey);
-  if (!cat) return null;
-  const Icon = cat.icon;
-  return (
-    <span className="tp-cat-badge" style={{ background: cat.bg, color: cat.color }}>
-      <Icon size={12} /> {cat.label}
-    </span>
-  );
-}
+export default function TaskRow({ task }) {
+  const { toggleFullTask } = useTasksStore();
+  const { id, title, subtitle, time, category, priority, streak, completed } = task;
 
-function PriorityBadge({ priority }) {
-  const p = PRIORITY_STYLES[priority];
-  if (!p) return null;
-  return (
-    <span className="tp-prio-badge" style={{ background: p.bg, color: p.text }}>
-      <span className="tp-prio-dot" style={{ background: p.dot }} />
-      {p.label}
-    </span>
-  );
-}
-
-export default function TaskRow({ task, onToggle }) {
-  const cat = CATEGORIES.find((c) => c.key === task.category);
-  const Icon = cat?.icon || Circle;
-  const isDone = task.completed;
+  const cat  = CATEGORIES.find((c) => c.key === category);
+  const pri  = priority ? PRIORITY_STYLES[priority] : null;
+  const Icon = cat?.icon;
 
   return (
-    <div className={`tp-task-row ${isDone ? "tp-task-done" : ""}`}>
-      <button className="tp-check" onClick={() => onToggle(task.id)} aria-label={isDone ? "Mark undone" : "Mark done"}>
-        {isDone
-          ? <CheckCircle2 size={22} color="#22C55E" />
-          : <Circle size={22} color="#C0B8B0" />}
-      </button>
-
-      <div
-        className="tp-task-icon"
-        style={{ background: cat?.bg || "#F3F0EC", color: cat?.color || "#8B5E3C" }}
-      >
-        <Icon size={18} />
+    <div
+      className={`tk-task-row${completed ? " done" : ""}`}
+      onClick={() => toggleFullTask(id)}
+    >
+      {/* Checkbox */}
+      <div className={`tk-cb${completed ? " checked" : ""}`}>
+        {completed && <CheckCircle2 size={14} color="#fff" />}
       </div>
 
-      <div className="tp-task-body">
-        <p className="tp-task-title">{task.title}</p>
-        <p className="tp-task-sub">{task.subtitle}</p>
-        <div className="tp-task-tags">
-          {task.category && <CategoryBadge categoryKey={task.category} />}
-          {task.priority && <PriorityBadge priority={task.priority} />}
-        </div>
+      {/* Category icon */}
+      <div className="tk-task-icon" style={{ background: cat?.bg ?? "#F3F4F6" }}>
+        {Icon && <Icon size={18} color={cat?.color ?? "#9CA3AF"} />}
       </div>
 
-      <div className="tp-task-meta">
-        <div className="tp-task-time">
-          <Clock size={12} color="#9CA3AF" />
-          <span>{task.time}</span>
+      {/* Body */}
+      <div className="tk-task-body">
+        <div className="tk-task-title-row">
+          <span className={`tk-task-name${completed ? " done" : ""}`}>{title}</span>
         </div>
-        {task.streak && (
-          <div className="tp-task-streak">
-            <Flame size={12} color="#F59E0B" />
-            <span>{task.streak}</span>
+        <p className="tk-task-sub">{subtitle}</p>
+        {/* Category badge */}
+        {cat && (
+          <span className="tk-cat-badge" style={{ color: cat.color, background: cat.bg }}>
+            {cat.label}
+          </span>
+        )}
+      </div>
+
+      {/* Right meta */}
+      <div className="tk-task-meta">
+        {/* Time */}
+        <div className="tk-time-chip">
+          <Clock size={11} color="var(--text-muted)" />
+          {time}
+        </div>
+
+        {/* Streak badge */}
+        {streak && (
+          <div className="tk-streak-chip">
+            <Flame size={11} color="#E57338" />
+            {streak}
           </div>
+        )}
+
+        {/* Priority badge */}
+        {pri && !completed && (
+          <div className="tk-priority-chip" style={{ background: pri.bg, color: pri.text }}>
+            <span className="tk-priority-dot" style={{ background: pri.dot }} />
+            {pri.label}
+          </div>
+        )}
+
+        {/* Completed badge */}
+        {completed && (
+          <span className="done-badge">Completed</span>
         )}
       </div>
     </div>

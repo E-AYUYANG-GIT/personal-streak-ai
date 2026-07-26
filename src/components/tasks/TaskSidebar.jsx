@@ -45,4 +45,4 @@ export default function TaskSidebar() {
       <div className="tp-greeting">Good morning, Elizar! ☀️</div>
     </aside>
   );
-}
+}

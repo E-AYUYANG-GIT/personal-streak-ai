@@ -1,43 +1,38 @@
 import { Target } from "lucide-react";
+import {
+  DAILY_GOAL_OPTIONS,
+  HOME_PAGE_OPTIONS,
+  START_WEEK_OPTIONS,
+} from "../../lib/constants";
+import useSettingsStore from "../../store/settingsStore";
+import SettingsSelect from "./SettingsSelect";
+
+const ROWS = [
+  { label: "Daily Goal",        storeKey: "dailyGoal",       setKey: "setDailyGoal",       options: DAILY_GOAL_OPTIONS    },
+  { label: "Default Home Page", storeKey: "defaultHomePage", setKey: "setDefaultHomePage",  options: HOME_PAGE_OPTIONS     },
+  { label: "Start Week On",     storeKey: "startWeekOn",     setKey: "setStartWeekOn",      options: START_WEEK_OPTIONS    },
+];
 
 export default function ProductivityCard() {
-    return (
-        <div className="sp-card">
-            <div className="sp-card-header">
-                <Target size={16} color="#8B5E3C" />
-                <span className="sp-card-header-title">Productivity</span>
-            </div>
+  const store = useSettingsStore();
 
-            <div className="sp-card-body sp-card-body--gap">
-                <div className="sp-select-row">
-                    <span className="sp-select-label">Daily Goal</span>
-                    <select className="sp-select">
-                        <option>7 Tasks</option>
-                        <option>5 Tasks</option>
-                        <option>10 Tasks</option>
-                        <option>3 Tasks</option>
-                    </select>
-                </div>
+  return (
+    <div className="card st-section">
+      <div className="st-section-title">
+        <Target size={16} color="var(--text-sub)" />
+        Productivity
+      </div>
 
-                <div className="sp-select-row">
-                    <span className="sp-select-label">Default Home Page</span>
-                    <select className="sp-select">
-                        <option>Home</option>
-                        <option>Tasks</option>
-                        <option>Journal</option>
-                        <option>Progress</option>
-                    </select>
-                </div>
-
-                <div className="sp-select-row">
-                    <span className="sp-select-label">Start Week On</span>
-                    <select className="sp-select">
-                        <option>Monday</option>
-                        <option>Sunday</option>
-                        <option>Saturday</option>
-                    </select>
-                </div>
-            </div>
+      {ROWS.map(({ label, storeKey, setKey, options }) => (
+        <div key={label} className="st-row">
+          <span className="st-row-label">{label}</span>
+          <SettingsSelect
+            value={store[storeKey]}
+            options={options}
+            onChange={store[setKey]}
+          />
         </div>
-    );
+      ))}
+    </div>
+  );
 }

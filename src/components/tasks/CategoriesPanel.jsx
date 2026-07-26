@@ -1,28 +1,29 @@
 import { CATEGORIES } from "../../lib/constants";
+import useTasksStore from "../../store/tasksStore";
 
-export default function CategoriesPanel({ tasks }) {
-  const counts = CATEGORIES.map((c) => ({
-    ...c,
-    count: tasks.filter((t) => t.category === c.key).length,
-  }));
+export default function CategoriesPanel() {
+  const { fullTasks } = useTasksStore();
+
+  /* Count tasks per category */
+  const countByCategory = CATEGORIES.reduce((acc, { key }) => {
+    acc[key] = fullTasks.filter((t) => t.category === key).length;
+    return acc;
+  }, {});
 
   return (
-    <div className="card tp-categories">
-      <h3 className="tp-card-title">Categories</h3>
-      {counts.map((cat) => {
-        const Icon = cat.icon;
-        return (
-          <div key={cat.key} className="tp-cat-row">
-            <div className="tp-cat-left">
-              <div className="tp-cat-icon" style={{ background: cat.bg, color: cat.color }}>
-                <Icon size={14} />
-              </div>
-              <span>{cat.label}</span>
+    <div className="card">
+      <p className="section-label" style={{ marginBottom: 14 }}>Categories</p>
+      <div className="tk-cat-list">
+        {CATEGORIES.map(({ key, label, icon: Icon, color, bg }) => (
+          <div key={key} className="tk-cat-row">
+            <div className="tk-cat-icon" style={{ background: bg }}>
+              <Icon size={14} color={color} />
             </div>
-            <span className="tp-cat-count">{cat.count}</span>
+            <span className="tk-cat-name">{label}</span>
+            <span className="tk-cat-count">{countByCategory[key] ?? 0}</span>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
