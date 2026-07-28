@@ -2,6 +2,8 @@ import useTasksStore from "../../store/tasksStore";
 import TaskRow from "./TaskRow";
 
 export default function TaskListSection() {
+
+  
   const { getFilteredTasks } = useTasksStore();
   const allTasks = getFilteredTasks();
 
@@ -31,6 +33,7 @@ export default function TaskListSection() {
       {/* Completed section */}
       {completed.length > 0 && (
         <>
+        <div className="tk-completed-section"> 
           <div className="tk-section-header" style={{ marginTop: 20 }}>
             <span className="tk-section-title">Completed Today</span>
             <span className="tk-section-count">{completed.length}</span>
@@ -39,6 +42,7 @@ export default function TaskListSection() {
             {completed.map((task) => (
               <TaskRow key={task.id} task={task} />
             ))}
+          </div>
           </div>
         </>
       )}

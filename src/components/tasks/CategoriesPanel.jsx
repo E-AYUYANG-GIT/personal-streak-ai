@@ -2,11 +2,13 @@ import { CATEGORIES } from "../../lib/constants";
 import useTasksStore from "../../store/tasksStore";
 
 export default function CategoriesPanel() {
-  const { fullTasks } = useTasksStore();
+  // 1. Destructure `tasks` instead of `fullTasks`
+  const { tasks = [] } = useTasksStore();
 
   /* Count tasks per category */
   const countByCategory = CATEGORIES.reduce((acc, { key }) => {
-    acc[key] = fullTasks.filter((t) => t.category === key).length;
+    // 2. Filter from `tasks`
+    acc[key] = tasks.filter((t) => t.category === key).length;
     return acc;
   }, {});
 

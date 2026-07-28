@@ -3,7 +3,7 @@ import { CATEGORIES, PRIORITY_STYLES } from "../../lib/constants";
 import useTasksStore from "../../store/tasksStore";
 
 export default function TaskRow({ task }) {
-  const { toggleFullTask } = useTasksStore();
+  const { toggleTask } = useTasksStore();
   const { id, title, subtitle, time, category, priority, streak, completed } = task;
 
   const cat  = CATEGORIES.find((c) => c.key === category);
@@ -13,7 +13,7 @@ export default function TaskRow({ task }) {
   return (
     <div
       className={`tk-task-row${completed ? " done" : ""}`}
-      onClick={() => toggleFullTask(id)}
+      onClick={() => toggleTask(id)}
     >
       {/* Checkbox */}
       <div className={`tk-cb${completed ? " checked" : ""}`}>

@@ -1,5 +1,7 @@
 import AvatarCard from "../home/AvatarCard";
 import useUIStore from "../../store/uiStore";
+import useTasksStore from "../../store/tasksStore";
+import ProgressPanel from "./ProgressPanel";
 import { Home, CheckSquare, BookOpen, BarChart2, Settings } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -10,30 +12,23 @@ const NAV_ITEMS = [
   { label: "Settings", Icon: Settings,   navIdx: 4 },
 ];
 
-export default function TaskSidebar() {
+export default function TaskSidebar({ tasks: propTasks }) {
   const { activeNav, setActiveNav } = useUIStore();
+
+  // Get tasks from Zustand
+  const storeTasks = useTasksStore((s) => s.tasks);
+
+  // Use passed tasks if available, otherwise use all tasks
+  const tasks = propTasks ?? storeTasks;
+
+  const completed = tasks.filter((t) => t.completed).length;
+  const total     = tasks.length;
 
   return (
     <aside className="tp-sidebar">
       <AvatarCard name="Elizar" />
 
-      <div className="card tp-nav-card">
-        <nav className="tp-nav">
-          {NAV_ITEMS.map(({ label, Icon, navIdx }) => {
-            const isActive = activeNav === navIdx;
-            return (
-              <div
-                key={label}
-                className={`tp-nav-item ${isActive ? "tp-nav-active" : ""}`}
-                onClick={() => setActiveNav(navIdx)}
-              >
-                <Icon size={18} />
-                <span className="tp-nav-label">{label}</span>
-              </div>
-            );
-          })}
-        </nav>
-      </div>
+      <ProgressPanel     completed={completed} total={total} />
 
       <div className="card tp-focus">
         <p className="tp-focus-text">

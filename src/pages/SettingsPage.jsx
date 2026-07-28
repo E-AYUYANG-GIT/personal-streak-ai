@@ -61,14 +61,13 @@ export default function SettingsPage() {
 
         {/* Row 2 — Character (left) + Notifications (center) + AI Assistant (right) */}
         <div className="st-grid-3">
-          <CharacterCard />
           <NotificationsCard />
           <AIAssistantCard />
+          <ProductivityCard />
         </div>
 
         {/* Row 3 — Productivity (left) + Data & Backup (center) + About (right) */}
         <div className="st-grid-3">
-          <ProductivityCard />
           <DataBackupCard />
           <AboutCard />
         </div>

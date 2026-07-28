@@ -1,5 +1,6 @@
 import { Info, GitBranch, Shield, FileText, ExternalLink } from "lucide-react";
 import { TECH_BADGES, ABOUT_LINKS } from "../../lib/constants";
+import bookImg from "../../../public/book.png"
 
 // 1. Map all potential labels from ABOUT_LINKS to icons
 const LINK_ICONS = {
@@ -20,7 +21,12 @@ export default function AboutCard() {
 
       {/* App identity */}
       <div className="st-about-row">
-        <div className="st-about-app-icon">📖</div>
+        {/* Book PNG with Tailwind drop-shadow for transparent PNG outlines */}
+        <img 
+          src={bookImg} 
+          alt="Journal Book" 
+          className="w-1/8 max-w-[120px] h-auto"
+        />
         <div>
           <p className="st-about-app-name">Personal Streak AI</p>
           <p className="st-about-version">Version 1.0.0</p>

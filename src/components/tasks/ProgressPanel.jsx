@@ -12,9 +12,6 @@ export default function ProgressPanel({ completed, total }) {
       <p className="tp-progress-sub">
         {completed} / {total} tasks completed
       </p>
-      <div className="tp-progress-bar-track">
-        <div className="tp-progress-bar-fill" style={{ width: `${progress}%` }} />
-      </div>
       <p className="tp-progress-msg">Keep going! You&apos;re doing great! 💪</p>
     </div>
   );

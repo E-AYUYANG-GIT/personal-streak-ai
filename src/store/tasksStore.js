@@ -1,62 +1,50 @@
 import { create } from "zustand";
-import { INITIAL_TASKS, INITIAL_TASKS_FULL } from "../lib/constants";
+import { INITIAL_TASKS } from "../lib/constants";
 
 const useTasksStore = create((set, get) => ({
-
-  /* ─────────────────────────────────────────
-     HOME PAGE — simple tasks (icon-based)
-  ───────────────────────────────────────── */
+  /* ────────── STATE ────────── */
   tasks: INITIAL_TASKS,
+  activeFilter: "all",
+
+  /* ────────── ACTIONS ────────── */
+  setActiveFilter: (filter) => set({ activeFilter: filter }),
 
   toggleTask: (id) =>
     set((state) => ({
-      tasks: state.tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      ),
+      tasks: state.tasks.map((task) => {
+        if (task.id !== id) return task;
+
+        const isCompleting = !task.completed;
+
+        return {
+          ...task,
+          completed: isCompleting,
+          completedAt: isCompleting ? Date.now() : null,
+        };
+      }),
     })),
 
-  addTask: (task) =>
+  addTask: (newTask) =>
     set((state) => ({
-      tasks: [...state.tasks, { ...task, id: Date.now(), completed: false }],
+      tasks: [
+        ...state.tasks,
+        { ...newTask, id: Date.now(), completed: false },
+      ],
     })),
 
-  /* ─────────────────────────────────────────
-     TASKS PAGE — full tasks (category + priority)
-  ───────────────────────────────────────── */
-  fullTasks: INITIAL_TASKS_FULL,
-
-  toggleFullTask: (id) =>
-    set((state) => ({
-      fullTasks: state.fullTasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      ),
-    })),
-
-  addFullTask: (task) =>
-    set((state) => ({
-      fullTasks: [...state.fullTasks, { ...task, id: Date.now(), completed: false }],
-    })),
-
-  /* ─────────────────────────────────────────
-     FILTER — "all" | "today" | "upcoming" | "completed"
-  ───────────────────────────────────────── */
-  activeFilter: "all",
-
-  setActiveFilter: (filter) => set({ activeFilter: filter }),
-
-  /* ─────────────────────────────────────────
-     DERIVED — returns filtered fullTasks
-  ───────────────────────────────────────── */
+  /* ────────── SELECTORS ────────── */
   getFilteredTasks: () => {
-    const { fullTasks, activeFilter } = get();
+    const { tasks, activeFilter } = get();
     switch (activeFilter) {
-      case "completed": return fullTasks.filter((t) =>  t.completed);
-      case "today":     return fullTasks.filter((t) => !t.completed);
-      case "upcoming":  return fullTasks.filter((t) => !t.completed);
-      default:          return fullTasks; // "all"
+      case "completed":
+        return tasks.filter((t) => t.completed);
+      case "today":
+      case "upcoming":
+        return tasks.filter((t) => !t.completed);
+      default:
+        return tasks; // "all"
     }
   },
-
 }));
 
 export default useTasksStore;

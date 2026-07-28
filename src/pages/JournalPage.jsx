@@ -53,7 +53,7 @@ export default function JournalPage() {
         <JournalHeader onNewEntry={() => { }} />
         <JournalFilters active={activeFilter} onChange={setActiveFilter} />
 
-        <JournalEntry onSave={handleSaveEntry} />
+        {/* <JournalEntry onSave={handleSaveEntry} /> THIS WILL BE A MODAL FEATURE IN THE FUTURE FOR NOW IGNORE THIS */}
         <TodaySummary />
         <PreviousEntries entries={filteredEntries} />
       </main>

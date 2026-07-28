@@ -1,5 +1,5 @@
 import { Plus, Search, ListFilter } from "lucide-react";
-import journalIcon from "/journal.png";
+import journalIcon from "/book.png";
 
 export default function JournalHeader({ onNewEntry }) {
   return (

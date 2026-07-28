@@ -18,16 +18,17 @@ export const NAV_ITEMS = [
 ];
 
 /* ─────────────────────────────────────────
-   HOME — TASKS (simple, icon-based)
+   UNIFIED TASKS LIST
    NOTE: GitHub icon removed in lucide-react v1.0.
    Using GitCommitHorizontal as replacement.
 ───────────────────────────────────────── */
 export const INITIAL_TASKS = [
-  { id: 1, title: "DataCamp Daily Streak", subtitle: "Keep learning, keep growing!", time: "09:00 AM", iconBg: "#C07F55", Icon: Layers, completed: true },
-  { id: 2, title: "FLYRANK 1 Assignment", subtitle: "Work on your assignment", time: "01:00 PM", iconBg: "#C07F55", Icon: FileText, completed: false },
-  { id: 3, title: "GitHub Daily Contribution", subtitle: "One commit a day keeps progress alive", time: "03:00 PM", iconBg: "#1C1C1C", Icon: GitCommitHorizontal, completed: false },
-  { id: 4, title: "Workout & Health", subtitle: "Take care of your body", time: "06:00 PM", iconBg: "#EF4444", Icon: Heart, completed: false },
-  { id: 5, title: "Daily Journal Reflection", subtitle: "Reflect, learn and improve", time: "09:00 PM", iconBg: "#3B82F6", Icon: BookMarked, completed: false },
+  { id: 1, title: "DataCamp Daily Streak 🔥", subtitle: "Learn SQL Fundamentals", time: "09:00 AM", category: "learning", streak: "12 days", iconBg: "#C07F55", Icon: Layers, completed: false },
+  { id: 2, title: "FlyRank 1 Assignment", subtitle: "Complete Week 2 portfolio", time: "01:00 PM", category: "work", priority: "Medium", iconBg: "#C07F55", Icon: FileText, completed: false },
+  { id: 3, title: "GitHub Daily Contribution", subtitle: "One commit a day keeps progress alive", time: "03:00 PM", category: "coding", priority: "Medium", iconBg: "#1C1C1C", Icon: GitCommitHorizontal, completed: false },
+  { id: 4, title: "Workout & Exercise", subtitle: "30 min strength training", time: "06:00 PM", category: "health", priority: "High", iconBg: "#EF4444", Icon: Heart, completed: false },
+  { id: 5, title: "Daily Journal Reflection", subtitle: "Reflect, learn and improve", time: "09:00 PM", category: "personal", priority: "Low", iconBg: "#3B82F6", Icon: BookMarked, completed: false },
+  { id: 6, title: "Clean Workspace", subtitle: "Keep environment clean", time: "10:30 AM", category: "personal", priority: "Low", completed: true },
 ];
 
 /* ─────────────────────────────────────────
@@ -67,15 +68,6 @@ export const PRIORITY_STYLES = {
   Medium: { dot: "#F59E0B", label: "Medium", text: "#92400E", bg: "#FEF3C7" },
   Low: { dot: "#10B981", label: "Low", text: "#065F46", bg: "#D1FAE5" },
 };
-
-export const INITIAL_TASKS_FULL = [
-  { id: 1, title: "DataCamp Daily Streak 🔥", subtitle: "Learn SQL Fundamentals", time: "09:00 AM", category: "learning", streak: "12 days", completed: false },
-  { id: 2, title: "FlyRank 1 Assignment", subtitle: "Complete Week 2 portfolio", time: "01:00 PM", category: "work", priority: "Medium", completed: false },
-  { id: 3, title: "GitHub Daily Contribution", subtitle: "One commit a day", time: "Anytime", category: "coding", priority: "Medium", completed: false },
-  { id: 4, title: "Workout & Exercise", subtitle: "30 min strength training", time: "06:00 PM", category: "health", priority: "High", completed: false },
-  { id: 5, title: "Read 20 Pages", subtitle: "Book: Atomic Habits", time: "08:00 PM", category: "personal", priority: "Low", completed: false },
-  { id: 6, title: "Clean Workspace", subtitle: "Keep environment clean", time: "10:30 AM", category: "personal", completed: true },
-];
 
 /* ─────────────────────────────────────────
    PROGRESS PAGE — OVERALL STATS
@@ -230,3 +222,65 @@ export const ABOUT_LINKS = [
   { label: "License",        icon: "📄" },
 ];
  
+/* ─────────────────────────────────────────
+   JOURNAL — MOODS
+───────────────────────────────────────── */
+export const JOURNAL_MOODS = [
+  { emoji: "🤩", label: "Excited" },
+  { emoji: "😊", label: "Happy" },
+  { emoji: "🙂", label: "Calm" },
+  { emoji: "😐", label: "Neutral" },
+  { emoji: "😔", label: "Sad" },
+];
+
+/* ─────────────────────────────────────────
+   JOURNAL — TAGS & MOOD TREND
+───────────────────────────────────────── */
+export const JOURNAL_TAGS = [
+  { id: "personal", label: "Personal", color: "#3B82F6", bg: "#DBEAFE" },
+  { id: "work",     label: "Work",     color: "#F59E0B", bg: "#FEF3C7" },
+  { id: "learning", label: "Learning", color: "#8B6FE8", bg: "#EDE9FE" },
+  { id: "gratitude",label: "Gratitude",color: "#10B981", bg: "#D1FAE5" },
+  { id: "health",   label: "Health",   color: "#EF4444", bg: "#FEE2E2" },
+  { id: "ideas",    label: "Ideas",    color: "#EC4899", bg: "#FCE7F3" },
+];
+
+export const JOURNAL_MOOD_TREND = [
+  { day: "Mon", emoji: "😊", label: "Happy" },
+  { day: "Tue", emoji: "🤩", label: "Excited" },
+  { day: "Wed", emoji: "🙂", label: "Calm" },
+  { day: "Thu", emoji: "😐", label: "Neutral" },
+  { day: "Fri", emoji: "😊", label: "Happy" },
+  { day: "Sat", emoji: "🤩", label: "Excited" },
+  { day: "Sun", emoji: "🙂", label: "Calm" },
+];
+
+/* ─────────────────────────────────────────
+   JOURNAL — PREVIOUS ENTRIES
+───────────────────────────────────────── */
+export const PREVIOUS_ENTRIES = [
+  {
+    id: 1,
+    title: "Productive Coding & Deep Work Session",
+    date: "Yesterday • 8:30 PM",
+    mood: "😊",
+    tags: ["coding", "learning"],
+    content: "Fixed key state bugs and refactored the task store. Felt good to hit flow state early today and wrap up feature contributions.",
+  },
+  {
+    id: 2,
+    title: "Weekly Planning & Small Wins",
+    date: "3 Days Ago • 9:00 PM",
+    mood: "🤩",
+    tags: ["personal", "work"],
+    content: "Organized my schedule for the upcoming week. Maintained my streak and hit my study goals without burnout.",
+  },
+  {
+    id: 3,
+    title: "Mid-week Reflection",
+    date: "Last Week • 10:15 PM",
+    mood: "🙂",
+    tags: ["gratitude", "health"],
+    content: "Took time to clear my head and recharge. Expressing gratitude for steady progress and staying consistent.",
+  },
+];
