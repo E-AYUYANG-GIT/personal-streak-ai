@@ -23,11 +23,11 @@ export const NAV_ITEMS = [
    Using GitCommitHorizontal as replacement.
 ───────────────────────────────────────── */
 export const INITIAL_TASKS = [
-  { id: 1, title: "DataCamp Daily Streak 🔥", subtitle: "Learn SQL Fundamentals", time: "09:00 AM", category: "learning", streak: "12 days", iconBg: "#C07F55", Icon: Layers, completed: false },
-  { id: 2, title: "FlyRank 1 Assignment", subtitle: "Complete Week 2 portfolio", time: "01:00 PM", category: "work", priority: "Medium", iconBg: "#C07F55", Icon: FileText, completed: false },
-  { id: 3, title: "GitHub Daily Contribution", subtitle: "One commit a day keeps progress alive", time: "03:00 PM", category: "coding", priority: "Medium", iconBg: "#1C1C1C", Icon: GitCommitHorizontal, completed: false },
-  { id: 4, title: "Workout & Exercise", subtitle: "30 min strength training", time: "06:00 PM", category: "health", priority: "High", iconBg: "#EF4444", Icon: Heart, completed: false },
-  { id: 5, title: "Daily Journal Reflection", subtitle: "Reflect, learn and improve", time: "09:00 PM", category: "personal", priority: "Low", iconBg: "#3B82F6", Icon: BookMarked, completed: false },
+  { id: 1, title: "DataCamp Daily Streak 🔥", subtitle: "Learn SQL Fundamentals", time: "09:00 AM", category: "learning", streak: "12 days", Icon: Layers, completed: false },
+  { id: 2, title: "FlyRank 1 Assignment", subtitle: "Complete Week 2 portfolio", time: "01:00 PM", category: "work", priority: "Medium", Icon: FileText, completed: false },
+  { id: 3, title: "GitHub Daily Contribution", subtitle: "One commit a day keeps progress alive", time: "03:00 PM", category: "coding", priority: "Medium", Icon: GitCommitHorizontal, completed: false },
+  { id: 4, title: "Workout & Exercise", subtitle: "30 min strength training", time: "06:00 PM", category: "health", priority: "High", Icon: Heart, completed: false },
+  { id: 5, title: "Daily Journal Reflection", subtitle: "Reflect, learn and improve", time: "09:00 PM", category: "personal", priority: "Low", Icon: BookMarked, completed: false },
   { id: 6, title: "Clean Workspace", subtitle: "Keep environment clean", time: "10:30 AM", category: "personal", priority: "Low", completed: true },
 ];
 
