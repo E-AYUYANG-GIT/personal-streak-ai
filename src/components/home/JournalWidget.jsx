@@ -1,5 +1,5 @@
 import useUIStore from "../../store/uiStore";
-import bookImg from "../../../public/book.png"
+import bookImg from "../../assets/book.png"
 export default function JournalWidget({ onOpenJournal }) {
 const { journalText, setJournalText } = useUIStore();
 

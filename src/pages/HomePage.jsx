@@ -1,6 +1,6 @@
 import AvatarCard    from "../components/home/AvatarCard";
 import MoodCheck     from "../components/home/MoodCheck";
-import FocusCard     from "../components/home/FocusCard";
+import AITipPanel     from "../components/tasks/AITipPanel";
 import ProgressCard  from "../components/home/ProgressCard";
 import TaskList      from "../components/home/TaskList";
 import JournalWidget from "../components/home/JournalWidget";
@@ -24,7 +24,7 @@ export default function HomePage() {
       <div className="col">
         <AvatarCard name="Elizar" />
         <MoodCheck />
-        <FocusCard />
+        <AITipPanel/>
       </div>
 
       {/* ── CENTER COLUMN ── */}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, ListFilter } from "lucide-react";
-import journalIcon from "/book.png";
+import journalIcon from "../../assets/book.png";
 import AddJournalModalGuided from "../modals/AddJournalModal";
 
 export default function JournalHeader({ onNewEntry }) {
