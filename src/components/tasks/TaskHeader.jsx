@@ -8,8 +8,13 @@ export default function TaskHeader({ onAddTask }) {
   const addTask = useTasksStore((state) => state.addTask);
 
   const handleAddTask = (newTask) => {
+    // Add to Zustand store
     if (addTask) {
       addTask(newTask);
+    }
+    // Also trigger parent callback if passed down
+    if (onAddTask) {
+      onAddTask(newTask);
     }
   };
 
@@ -19,8 +24,12 @@ export default function TaskHeader({ onAddTask }) {
         <h1 className="pg-page-title">Tasks</h1>
         <p className="pg-page-sub">Stay focused and get things done.</p>
       </div>
+
       <div className="tk-header-actions">
-        <button button onClick={() => setIsModalOpen(true)} className="add-task-btn tk-add-btn" onClick={onAddTask}>
+        <button 
+          onClick={() => setIsModalOpen(true)} 
+          className="add-task-btn tk-add-btn"
+        >
           <Plus size={15} />
           Add Task
         </button>
@@ -31,7 +40,6 @@ export default function TaskHeader({ onAddTask }) {
         onClose={() => setIsModalOpen(false)}
         onAddTask={handleAddTask}
       />
-
     </div>
   );
 }

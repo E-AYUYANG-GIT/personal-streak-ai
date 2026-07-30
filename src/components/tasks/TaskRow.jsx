@@ -4,10 +4,12 @@ import useTasksStore from "../../store/tasksStore";
 
 export default function TaskRow({ task }) {
   const { toggleTask } = useTasksStore();
-  const { id, title, subtitle, time, category, priority, streak, completed } = task;
+  const { id, title, subtitle, time, categoryId, category, priority, streak, completed } = task;
 
-  const cat  = CATEGORIES.find((c) => c.key === category);
-  const pri  = priority ? PRIORITY_STYLES[priority] : null;
+  // Support both categoryId and category properties
+  const catId = categoryId || category;
+  const cat = CATEGORIES.find((c) => c.id === catId);
+  const pri = priority ? PRIORITY_STYLES[priority] : null;
   const Icon = cat?.icon;
 
   return (
@@ -31,6 +33,7 @@ export default function TaskRow({ task }) {
           <span className={`tk-task-name${completed ? " done" : ""}`}>{title}</span>
         </div>
         <p className="tk-task-sub">{subtitle}</p>
+        
         {/* Category badge */}
         {cat && (
           <span className="tk-cat-badge" style={{ color: cat.color, background: cat.bg }}>

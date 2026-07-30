@@ -29,8 +29,12 @@ export default function TaskList() {
       </div>
 
       <div className="task-list">
-        {tasks.map(({ id, title, subtitle, time, category, completed }) => {
-          const cat = CATEGORIES.find((c) => c.key === category);
+        {tasks.map((task) => {
+          const { id, title, subtitle, time, categoryId, category, completed } = task;
+          
+          // Support both categoryId and category properties
+          const catId = categoryId || category;
+          const cat = CATEGORIES.find((c) => c.id === catId);
           const Icon = cat?.icon;
 
           return (
