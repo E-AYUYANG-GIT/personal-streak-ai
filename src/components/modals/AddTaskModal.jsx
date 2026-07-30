@@ -5,7 +5,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]); // Defaults to Work
-  const [priority, setPriority] = useState('Medium'); // Capitalized to match PRIORITY_STYLES keys
+  const [priority, setPriority] = useState('Medium');
 
   if (!isOpen) return null;
 
@@ -24,8 +24,8 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
       title: title.trim(),
       subtitle: subtitle.trim(),
       time: currentTime,
-      category: selectedCategory.key,
-      Icon: selectedCategory.icon, // Lucide icon reference directly assigned
+      categoryId: selectedCategory.id, // Fixed: use .id instead of .key
+      category: selectedCategory.id,   // Fixed: set category ID string
       priority,
       completed: false,
     };
@@ -128,12 +128,12 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {CATEGORIES.map((cat) => {
-                const isSelected = selectedCategory.key === cat.key;
+                const isSelected = selectedCategory.id === cat.id; // Fixed: compare .id
                 const IconComponent = cat.icon;
 
                 return (
                   <button
-                    key={cat.key}
+                    key={cat.id} // Fixed: use cat.id for key
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
                     style={{
@@ -159,7 +159,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             </div>
           </div>
 
-          {/* 4. Priority Selection (Last Section) */}
+          {/* 4. Priority Selection */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px' }}>
               Priority
