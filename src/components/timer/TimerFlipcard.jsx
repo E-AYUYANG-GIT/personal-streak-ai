@@ -1,119 +1,109 @@
-import React, { useEffect, useState } from "react";
+import { useRef } from "react";
 import useTimerStore from "../../store/timerStore";
 
-/** Individual 3D Split-Flap Digit */
-function SingleDigit({ digit }) {
-  const [current, setCurrent] = useState(digit);
-  const [previous, setPrevious] = useState(digit);
-  const [isFlipping, setIsFlipping] = useState(false);
+function FlipUnit({ value, label, unitKey, isEditable, onAdjust }) {
+  const touchStartY = useRef(null);
+  const display = String(value).padStart(2, "0");
 
-  useEffect(() => {
-    if (digit !== current) {
-      setPrevious(current);
-      setCurrent(digit);
-      setIsFlipping(true);
+  /* Native Desktop Wheel Scroll */
+  const handleWheel = (e) => {
+    if (!isEditable) return;
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 1 : -1;
+    onAdjust(unitKey, delta);
+  };
 
-      const timer = setTimeout(() => {
-        setIsFlipping(false);
-        setPrevious(digit); // FIX: Sync previous state when flip finishes!
-      }, 440);
+  /* Mobile Touch Gesture Handling */
+  const handleTouchStart = (e) => {
+    if (!isEditable) return;
+    touchStartY.current = e.touches[0].clientY;
+  };
 
-      return () => clearTimeout(timer);
+  const handleTouchMove = (e) => {
+    if (!isEditable || touchStartY.current === null) return;
+    const currentY = e.touches[0].clientY;
+    const diffY = touchStartY.current - currentY;
+
+    // Trigger step after 18px touch drag movement
+    if (Math.abs(diffY) > 18) {
+      const delta = diffY > 0 ? 1 : -1;
+      onAdjust(unitKey, delta);
+      touchStartY.current = currentY; // reset threshold relative to drag
     }
-  }, [digit, current]);
+  };
+
+  const handleTouchEnd = () => {
+    touchStartY.current = null;
+  };
 
   return (
-    <div className={`split-flap-digit ${isFlipping ? "is-flipping" : ""}`}>
-      {/* Static Top Half (Shows NEW digit) */}
-      <div className="card-half top">
-        <span>{current}</span>
+    <div
+      className={`tf-unit ${isEditable ? "tf-unit--editable" : ""}`}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      title={isEditable ? "Scroll or drag up/down to edit" : undefined}
+    >
+      <div className="tf-card">
+        <span className="tf-digits">{display}</span>
       </div>
-
-      {/* Static Bottom Half (Shows OLD digit during flip, NEW digit when idle) */}
-      <div className="card-half bottom">
-        <span>{isFlipping ? previous : current}</span>
-      </div>
-
-      {/* Flap animation layers ONLY rendered while active */}
-      {isFlipping && (
-        <>
-          {/* Top Flap (Folds down showing old digit) */}
-          <div className="card-half flap top-flap">
-            <span>{previous}</span>
-          </div>
-
-          {/* Bottom Flap (Unfolds down showing new digit) */}
-          <div className="card-half flap bottom-flap">
-            <span>{current}</span>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-/** 2-Digit Block with Split-Flap and Side Hinges */
-function FlipBlock({ value, label, isBreak }) {
-  const strVal = String(value).padStart(2, "0");
-
-  return (
-    <div className={`flip-block-container ${isBreak ? "flip-block--break" : ""}`}>
-      {/* Side Metallic Hinges */}
-      <div className="hinge hinge-left" />
-      <div className="hinge hinge-right" />
-
-      {/* Horizontal Crease Line */}
-      <div className="crease-line" />
-
-      {/* Digits Container */}
-      <div className="flip-digits-wrap">
-        <SingleDigit digit={strVal[0]} />
-        <SingleDigit digit={strVal[1]} />
-      </div>
-
-      {/* Embedded In-Card Label */}
-      <div className="flip-block-label">{label}</div>
+      <span className="tf-label">{label}</span>
     </div>
   );
 }
 
-/** Colon Separator Dots */
-function FlipColon() {
+function Colon() {
   return (
-    <div className="flip-colon">
-      <span className="colon-dot" />
-      <span className="colon-dot" />
+    <div className="tf-colon" aria-hidden="true">
+      <span className="tf-dot" />
+      <span className="tf-dot" />
     </div>
   );
 }
 
 export default function TimerFlipcard() {
-  const secondsLeft = useTimerStore((s) => s.secondsLeft);
+  const timeLeft = useTimerStore((s) => s.timeLeft);
   const isRunning = useTimerStore((s) => s.isRunning);
-  const tick = useTimerStore((s) => s.tick);
   const mode = useTimerStore((s) => s.mode);
+  const adjustUnit = useTimerStore((s) => s.adjustUnit);
 
-  const isBreak = mode === "shortBreak" || mode === "longBreak";
+  const hours = Math.floor(timeLeft / 3600);
+  const minutes = Math.floor((timeLeft % 3600) / 60);
+  const seconds = timeLeft % 60;
 
-  // Countdown Interval Driver
-  useEffect(() => {
-    let interval = null;
-    if (isRunning) {
-      interval = setInterval(() => tick(), 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isRunning, tick]);
-
-  const hours = Math.floor(secondsLeft / 3600);
-  const minutes = Math.floor((secondsLeft % 3600) / 60);
-  const secs = secondsLeft % 60;
+  const isEditable = !isRunning;
+  const isBreak = mode !== "focus";
 
   return (
-    <div className={`timer-flipcard-wrapper ${isBreak ? "is-break-mode" : ""}`}>
-      <FlipBlock value={hours} label="HOURS" isBreak={isBreak} />
-      <FlipColon />
-      <FlipBlock value={minutes} label="MINUTES" isBreak={isBreak} />
-      <FlipColon />
-      <FlipBlock value={secs} label="SECONDS" isBreak={isBreak} />
+    <div
+      className={`tf-root ${isBreak ? "tf-root--break" : ""}`}
+      role="timer"
+      aria-live="off"
+    >
+      <FlipUnit
+        value={hours}
+        label="HOURS"
+        unitKey="hours"
+        isEditable={isEditable}
+        onAdjust={adjustUnit}
+      />
+      <Colon />
+      <FlipUnit
+        value={minutes}
+        label="MINUTES"
+        unitKey="minutes"
+        isEditable={isEditable}
+        onAdjust={adjustUnit}
+      />
+      <Colon />
+      <FlipUnit
+        value={seconds}
+        label="SECONDS"
+        unitKey="seconds"
+        isEditable={isEditable}
+        onAdjust={adjustUnit}
+      />
     </div>
   );
 }

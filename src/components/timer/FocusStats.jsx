@@ -1,22 +1,33 @@
-// src/components/timer/FocusStats.jsx
-import { Clock } from "lucide-react";
 import useTimerStore from "../../store/timerStore";
 
 export default function FocusStats() {
   const minutesFocused = useTimerStore((s) => s.minutesFocused);
 
   return (
-    <div className="card fs-card">
-      <h3 className="tp-card-title">Focus Stats</h3>
-      <div className="fs-row">
-        <div className="fs-icon-wrap">
-          <Clock size={22} color="#C07A4A" />
-        </div>
-        <div>
-          <p className="fs-minutes">{minutesFocused}</p>
-          <p className="fs-sublabel">Minutes Focused Today</p>
+    <>
+      {/* ── Focus Stats ── */}
+      <div className="card">
+        <h3 className="tp-card-title">Focus Stats</h3>
+        <div className="fs-row">
+          <span className="fs-clock-icon" aria-hidden="true">🕐</span>
+          <div>
+            <span className="fs-minutes">{minutesFocused}</span>
+            <span className="fs-unit">Minutes Focused</span>
+            <span className="fs-unit">Today</span>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* ── Calm Environment ── */}
+      <div className="card">
+        <h3 className="tp-card-title">Calm Environment</h3>
+        <div className="fs-row">
+          <span className="fs-plant-icon" aria-hidden="true">🪴</span>
+          <p className="fs-calm-text">
+            Find a quiet place, breathe, and focus on one thing at a time.
+          </p>
+        </div>
+      </div>
+    </>
   );
 }

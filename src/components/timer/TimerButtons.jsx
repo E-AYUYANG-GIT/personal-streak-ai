@@ -1,45 +1,52 @@
-import React from "react";
-import { Pause, Play, RotateCcw } from "lucide-react";
 import useTimerStore from "../../store/timerStore";
 
 export default function TimerButtons() {
   const isRunning = useTimerStore((s) => s.isRunning);
-  const start = useTimerStore((s) => s.start);
-  const pause = useTimerStore((s) => s.pause);
-  const reset = useTimerStore((s) => s.reset);
+  const start     = useTimerStore((s) => s.start);
+  const pause     = useTimerStore((s) => s.pause);
+  const reset     = useTimerStore((s) => s.reset);
+  const skip      = useTimerStore((s) => s.skip);
 
   return (
-    <div className="timer-controls-row">
-      {/* Pause Button */}
+    <div className="tbtn-root">
+
+      {/* ── Skip — ghost card (replaces redundant Pause) ── */}
       <button
-        type="button"
-        className="ctrl-card-btn"
-        onClick={pause}
-        disabled={!isRunning}
+        className="tbtn--ghost"
+        onClick={skip}
+        aria-label="Skip session"
+        title="Skip to next session"
       >
-        <Pause size={24} className="ctrl-icon" />
-        <span className="ctrl-label">Pause</span>
+        <span className="tbtn-icon--skip" aria-hidden="true">⏭</span>
+        <span className="tbtn-label">Skip</span>
       </button>
 
-      {/* Main Circular CTA Button */}
+      {/* ── Start / Pause — primary circle ── */}
       <button
-        type="button"
-        className="ctrl-main-circle"
+        className="tbtn--primary"
         onClick={isRunning ? pause : start}
+        aria-label={isRunning ? "Pause timer" : "Start timer"}
       >
         {isRunning ? (
-          <Pause size={34} color="#FFF" fill="#FFF" />
+          <div className="tbtn-play-bars" aria-hidden="true">
+            <span /><span />
+          </div>
         ) : (
-          <Play size={34} color="#FFF" fill="#FFF" style={{ marginLeft: "4px" }} />
+          <span className="tbtn-play-tri" aria-hidden="true">▶</span>
         )}
-        <span className="circle-label">{isRunning ? "Pause" : "Start"}</span>
+        <span className="tbtn-label">{isRunning ? "Pause" : "Start"}</span>
       </button>
 
-      {/* Reset Button */}
-      <button type="button" className="ctrl-card-btn" onClick={reset}>
-        <RotateCcw size={24} className="ctrl-icon" />
-        <span className="ctrl-label">Reset</span>
+      {/* ── Reset — ghost card ── */}
+      <button
+        className="tbtn--ghost"
+        onClick={reset}
+        aria-label="Reset timer"
+      >
+        <span className="tbtn-icon--reset" aria-hidden="true">↺</span>
+        <span className="tbtn-label">Reset</span>
       </button>
+
     </div>
   );
 }
