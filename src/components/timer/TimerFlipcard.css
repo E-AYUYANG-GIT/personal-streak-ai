@@ -47,11 +47,11 @@
    ═══════════════════════ */
 .tf-root {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 0;
-  background: #2c1a0e;           /* rich dark-brown, matching screenshot */
+  background: #2c1a0e;           /* rich dark-brown */
   border-radius: 1.25rem;
-  padding: 2rem 2.5rem 1.5rem;
+  padding: 1.5rem 2.5rem 1.25rem;
   margin-bottom: 1.75rem;
   box-shadow: 0 8px 32px rgba(44, 26, 14, 0.28);
   justify-content: center;
@@ -61,14 +61,69 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  user-select: none;
+  touch-action: none;            /* Prevents page scrolling while swiping timer on mobile */
 }
 
+.tf-unit--editable {
+  cursor: ns-resize;
+}
+
+/* Preview numbers above and below */
+.tf-preview {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #a87c5a;
+  opacity: 0.45;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  transition: opacity 0.15s ease;
+}
+
+.tf-preview--top {
+  margin-bottom: 0.1rem;
+}
+
+.tf-preview--bottom {
+  margin-top: 0.1rem;
+}
+
+.tf-unit:hover .tf-preview {
+  opacity: 0.75;
+}
+
+/* Card container for central active digits */
 .tf-card {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 5.5rem;
+  overflow: hidden;
+  padding: 0.25rem 0;
+}
+
+.tf-digits-wrapper {
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Smooth vertical scroll keyframes for Windows/Android interactions */
+.tf-digits-wrapper.slide-up {
+  animation: slideUpAnim 0.18s ease-out;
+}
+
+.tf-digits-wrapper.slide-down {
+  animation: slideDownAnim 0.18s ease-out;
+}
+
+@keyframes slideUpAnim {
+  0% { transform: translateY(10px); opacity: 0.7; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDownAnim {
+  0% { transform: translateY(-10px); opacity: 0.7; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 .tf-digits {
@@ -79,8 +134,6 @@
   line-height: 1;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-  /* Subtle flip animation when value changes */
-  transition: opacity 0.1s ease;
 }
 
 .tf-label {
@@ -89,6 +142,7 @@
   letter-spacing: 0.12em;
   color: #a87c5a;              /* warm muted tan */
   text-transform: uppercase;
+  margin-top: 0.25rem;
 }
 
 /* Colon separator with two dots */
@@ -97,7 +151,7 @@
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;
-  padding: 0 0.5rem 1.75rem;  /* push up to align with digit mid-line */
+  padding: 0 0.5rem;
 }
 
 .tf-dot {
@@ -106,51 +160,6 @@
   height: 0.375rem;
   border-radius: 50%;
   background: #a87c5a;
-}
-
-/* ═══════════════════════
-   BREAK SECTION  (tbs-)
-   ═══════════════════════ */
-.tbs-root {
-  display: flex;
-  gap: 0.625rem;
-  margin-bottom: 1.75rem;
-  background: #f5f0ea;
-  border-radius: 999px;
-  padding: 0.25rem;
-}
-
-.tbs-tab {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.375rem;
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #6b7280;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-  white-space: nowrap;
-}
-
-.tbs-tab:hover:not(.tbs-tab--active) {
-  background: rgba(255, 255, 255, 0.6);
-  color: #3d2b1f;
-}
-
-.tbs-tab--active {
-  background: #3d2b1f;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.25);
-}
-
-.tbs-icon {
-  font-size: 0.875rem;
 }
 
 /* ═══════════════════════
@@ -404,5 +413,5 @@
 .col--center {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
 }

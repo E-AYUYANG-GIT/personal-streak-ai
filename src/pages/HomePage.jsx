@@ -31,7 +31,7 @@ export default function HomePage() {
       <div className="col">
         <ProgressCard completed={completed} total={total} />
         <TaskList />
-        <JournalWidget onOpenJournal={() => setActiveNav(2)} />
+        <JournalWidget onOpenJournal={() => setActiveNav(3)} />
       </div>
 
       {/* ── RIGHT COLUMN ── */}

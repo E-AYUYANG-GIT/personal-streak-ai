@@ -1,17 +1,24 @@
+// TaskList.jsx
 import React, { useState } from 'react';
-import { Plus, CheckCircle2, Clock, CheckSquare } from 'lucide-react';
+import { Plus, CheckCircle2, Clock, CheckSquare, Trash2 } from 'lucide-react';
 import { CATEGORIES } from '../../lib/constants';
 import useTasksStore from '../../store/tasksStore';
 import AddTaskModal from '../modals/AddTaskModal';
 
 export default function TaskList() {
-  const { tasks, toggleTask, addTask } = useTasksStore();
+  const { tasks, toggleTask, addTask, deleteTask } = useTasksStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddTask = (newTask) => {
     if (addTask) {
       addTask(newTask);
     }
+  };
+
+  const handleDelete = (e, taskId, isCompleted) => {
+    e.stopPropagation(); // Prevents toggling task completion when clicking delete
+    if (isCompleted) return; // Guard clause: block deletion if task is completed
+    deleteTask(taskId);
   };
 
   return (
@@ -31,7 +38,7 @@ export default function TaskList() {
       <div className="task-list">
         {tasks.map((task) => {
           const { id, title, subtitle, time, categoryId, category, completed } = task;
-          
+
           // Support both categoryId and category properties
           const catId = categoryId || category;
           const cat = CATEGORIES.find((c) => c.id === catId);
@@ -73,6 +80,17 @@ export default function TaskList() {
                   {time}
                 </div>
               )}
+
+              {/* Delete Button (Far Right) */}
+              <button
+                type="button"
+                className={`task-delete-btn${completed ? ' disabled' : ''}`}
+                onClick={(e) => handleDelete(e, id, completed)}
+                disabled={completed}
+                title={completed ? "Completed task cannot be deleted" : "Delete task"}
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           );
         })}

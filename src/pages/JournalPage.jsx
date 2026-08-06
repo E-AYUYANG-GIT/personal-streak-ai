@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import JournalHeader from "../components/journal/JournalHeader";
 import JournalFilters from "../components/journal/JournalFilters";
-import TodaySummary from "../components/journal/TodaySummary";
 import PreviousEntries from "../components/journal/PreviousEntries";
 import RightPanel from "../components/journal/RightPanel";
 import EntryPage from "../components/journal/entries/EntryPage";
@@ -97,7 +96,6 @@ export default function JournalPage() {
             <JournalFilters active={activeFilter} onChange={setActiveFilter} />
 
             {/* <JournalEntry onSave={handleSaveEntry} /> THIS WILL BE A MODAL FEATURE IN THE FUTURE FOR NOW IGNORE THIS */}
-            <TodaySummary />
             <PreviousEntries
               entries={filteredEntries}
               onEntryClick={(entry) => setSelectedEntry(entry)}

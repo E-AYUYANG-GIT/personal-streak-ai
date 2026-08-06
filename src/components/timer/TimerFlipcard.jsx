@@ -1,19 +1,33 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import useTimerStore from "../../store/timerStore";
 
 function FlipUnit({ value, label, unitKey, isEditable, onAdjust }) {
   const touchStartY = useRef(null);
-  const display = String(value).padStart(2, "0");
+  const [scrollAnim, setScrollAnim] = useState(null);
+  const animTimeout = useRef(null);
 
-  /* Native Desktop Wheel Scroll */
+  const pad = (num) => String(num).padStart(2, "0");
+
+  const triggerAdjust = (delta) => {
+    onAdjust(unitKey, delta);
+
+    // Trigger vertical slide animation
+    setScrollAnim(delta > 0 ? "slide-up" : "slide-down");
+    if (animTimeout.current) clearTimeout(animTimeout.current);
+    animTimeout.current = setTimeout(() => {
+      setScrollAnim(null);
+    }, 180);
+  };
+
+  /* Native Desktop Wheel Scroll (Windows) */
   const handleWheel = (e) => {
     if (!isEditable) return;
     e.preventDefault();
     const delta = e.deltaY < 0 ? 1 : -1;
-    onAdjust(unitKey, delta);
+    triggerAdjust(delta);
   };
 
-  /* Mobile Touch Gesture Handling */
+  /* Mobile Touch Gesture Handling (Android) */
   const handleTouchStart = (e) => {
     if (!isEditable) return;
     touchStartY.current = e.touches[0].clientY;
@@ -24,10 +38,10 @@ function FlipUnit({ value, label, unitKey, isEditable, onAdjust }) {
     const currentY = e.touches[0].clientY;
     const diffY = touchStartY.current - currentY;
 
-    // Trigger step after 18px touch drag movement
-    if (Math.abs(diffY) > 18) {
+    // Trigger step after 16px touch drag movement
+    if (Math.abs(diffY) > 16) {
       const delta = diffY > 0 ? 1 : -1;
-      onAdjust(unitKey, delta);
+      triggerAdjust(delta);
       touchStartY.current = currentY; // reset threshold relative to drag
     }
   };
@@ -43,11 +57,42 @@ function FlipUnit({ value, label, unitKey, isEditable, onAdjust }) {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      title={isEditable ? "Scroll or drag up/down to edit" : undefined}
+      title={isEditable ? "Scroll, drag up/down, or click arrows to edit" : undefined}
     >
+      {/* Wide Up Arrow Button */}
+      <button
+        type="button"
+        className="tf-arrow-btn tf-arrow-btn--up"
+        onClick={() => isEditable && triggerAdjust(1)}
+        disabled={!isEditable}
+        aria-label={`Increase ${label}`}
+      >
+        <svg viewBox="0 0 24 10" className="tf-arrow-svg" aria-hidden="true">
+          <polygon points="0,10 12,0 24,10" fill="currentColor" />
+        </svg>
+      </button>
+
+      {/* Main Rectangular Digits Card */}
       <div className="tf-card">
-        <span className="tf-digits">{display}</span>
+        <div className={`tf-digits-wrapper ${scrollAnim || ""}`}>
+          <span className="tf-digits">{pad(value)}</span>
+        </div>
       </div>
+
+      {/* Wide Down Arrow Button */}
+      <button
+        type="button"
+        className="tf-arrow-btn tf-arrow-btn--down"
+        onClick={() => isEditable && triggerAdjust(-1)}
+        disabled={!isEditable}
+        aria-label={`Decrease ${label}`}
+      >
+        <svg viewBox="0 0 24 10" className="tf-arrow-svg" aria-hidden="true">
+          <polygon points="0,0 12,10 24,0" fill="currentColor" />
+        </svg>
+      </button>
+
+      {/* Unit Label */}
       <span className="tf-label">{label}</span>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CATEGORIES, PRIORITY_STYLES } from '../../lib/constants.js';
 
 const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
@@ -6,12 +6,25 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const [subtitle, setSubtitle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]); // Defaults to Work
   const [priority, setPriority] = useState('Medium');
+  const [isHabit, setIsHabit] = useState(false);
+
+  // Debug: Track when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      console.log('[DEBUG Modal] AddTaskModal opened.');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    console.log('[DEBUG Modal] Form submit triggered.');
+
+    if (!title.trim()) {
+      console.warn('[DEBUG Modal] Submission blocked: Title is empty.');
+      return;
+    }
 
     // Automatically generate current local time (e.g., "02:30 PM")
     const currentTime = new Date().toLocaleTimeString('en-US', {
@@ -24,27 +37,40 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
       title: title.trim(),
       subtitle: subtitle.trim(),
       time: currentTime,
-      categoryId: selectedCategory.id, // Fixed: use .id instead of .key
-      category: selectedCategory.id,   // Fixed: set category ID string
+      categoryId: selectedCategory.id,
+      category: selectedCategory.id,
       priority,
       completed: false,
     };
 
-    onAddTask(newTask);
+    console.log('[DEBUG Modal] Sending payload to onAddTask:', newTask);
 
-    // Reset Form
-    setTitle('');
-    setSubtitle('');
-    setSelectedCategory(CATEGORIES[0]);
-    setPriority('Medium');
+    try {
+      // Await onAddTask in case it returns a Promise from Zustand/SQLite
+      await onAddTask(newTask);
+      console.log('[DEBUG Modal] Successfully dispatched onAddTask!');
 
-    onClose();
+      // Reset Form
+      setTitle('');
+      setSubtitle('');
+      setSelectedCategory(CATEGORIES[0]);
+      setPriority('Medium');
+      
+      console.log('[DEBUG Modal] Closing modal.');
+      onClose();
+    } catch (err) {
+      console.error('[DEBUG Modal] Error while adding task:', err);
+      alert(`Failed to add task: ${err?.message || err}`);
+    }
   };
 
   return (
     <div
       className="modal-overlay"
-      onClick={onClose}
+      onClick={() => {
+        console.log('[DEBUG Modal] Closed via overlay click.');
+        onClose();
+      }}
       style={{
         position: 'fixed',
         inset: 0,
@@ -72,7 +98,10 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
           <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Create New Task</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => {
+              console.log('[DEBUG Modal] Closed via top-right X button.');
+              onClose();
+            }}
             style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#666' }}
           >
             ✕
@@ -128,14 +157,17 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {CATEGORIES.map((cat) => {
-                const isSelected = selectedCategory.id === cat.id; // Fixed: compare .id
+                const isSelected = selectedCategory.id === cat.id;
                 const IconComponent = cat.icon;
 
                 return (
                   <button
-                    key={cat.id} // Fixed: use cat.id for key
+                    key={cat.id}
                     type="button"
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => {
+                      console.log('[DEBUG Modal] Selected category:', cat.id);
+                      setSelectedCategory(cat);
+                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -171,7 +203,10 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
                   <button
                     key={key}
                     type="button"
-                    onClick={() => setPriority(key)}
+                    onClick={() => {
+                      console.log('[DEBUG Modal] Selected priority:', key);
+                      setPriority(key);
+                    }}
                     style={{
                       flex: 1,
                       display: 'flex',
@@ -203,12 +238,28 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               })}
             </div>
           </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0' }}>
+            <input
+              type="checkbox"
+              id="habitToggle"
+              checked={isHabit}
+              onChange={(e) => setIsHabit(e.target.checked)}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            <label htmlFor="habitToggle" style={{ fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}>
+              Repeat daily as a Habit / Routine
+            </label>
+          </div>
 
           {/* Action Buttons */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '8px' }}>
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => {
+                console.log('[DEBUG Modal] Cancel button clicked.');
+                onClose();
+              }}
               style={{
                 padding: '10px 18px',
                 borderRadius: '8px',

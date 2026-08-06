@@ -21,8 +21,8 @@ export default function TaskHeader({ onAddTask }) {
   return (
     <div className="tk-header">
       <div className="tk-header-main">
-        <h1 className="pg-page-title">Tasks</h1>
-        <p className="pg-page-sub">Stay focused and get things done.</p>
+        <h1 className="tp-title">Tasks</h1>
+        <p className="tp-subtitle">Stay focused and get things done.</p>
       </div>
 
       <div className="tk-header-actions">

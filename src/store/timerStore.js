@@ -1,24 +1,42 @@
+// src/store/timerStore.js
 import { create } from "zustand";
+import ringSound from "../assets/ring.mp3";
+
+/* ── Controlled Audio Instance ── */
+const alarmAudio = new Audio(ringSound);
+alarmAudio.loop = false; // Explicitly disable looping
+
+const playAlarmSound = () => {
+  alarmAudio.pause();
+  alarmAudio.currentTime = 0; // Rewind to the beginning
+  alarmAudio.play().catch((err) => console.log("Audio play error:", err));
+};
+
+const stopAlarmSound = () => {
+  alarmAudio.pause();
+  alarmAudio.currentTime = 0;
+};
 
 /* ── Duration presets (seconds) ── */
 const PRESETS = {
-  focus:       25 * 60,   // 25 min
-  shortBreak:   5 * 60,   //  5 min
-  longBreak:   15 * 60,   // 15 min
+  focus:       60 * 60,   // 1 hour
+  shortBreak:  15 * 60,   // 15 min
+  longBreak:   30 * 60,   // 30 min
 };
 
 const TARGET_SESSIONS = 4;
 
 const useTimerStore = create((set, get) => ({
   /* ── State ── */
-  mode:              "focus",        // "focus" | "shortBreak" | "longBreak"
-  timeLeft:          PRESETS.focus,  // seconds remaining
+  mode:              "focus",
+  selectedBreak:     "shortBreak",
+  timeLeft:          PRESETS.focus,
   isRunning:         false,
   sessionsCompleted: 0,
   minutesFocused:    0,
   targetSessions:    TARGET_SESSIONS,
   intervalRef:       null,
-  focusDuration:     PRESETS.focus,  // custom focus duration in seconds
+  focusDuration:     PRESETS.focus,
 
   /* ── Derived helpers ── */
   getHours:   () => Math.floor(get().timeLeft / 3600),
@@ -26,20 +44,30 @@ const useTimerStore = create((set, get) => ({
   getSeconds: () => get().timeLeft % 60,
   getProgress: () => {
     const total = get().mode === "focus" ? get().focusDuration : PRESETS[get().mode];
+    if (!total) return 0;
     return ((total - get().timeLeft) / total) * 100;
   },
 
   /* ── Actions ── */
-  setMode: (mode) => {
+
+  setFocusMode: () => {
     get()._clearInterval();
-    const timeLeft = mode === "focus" ? get().focusDuration : PRESETS[mode];
-    set({ mode, timeLeft, isRunning: false });
+    stopAlarmSound();
+    set({
+      mode: "focus",
+      timeLeft: get().focusDuration,
+      isRunning: false,
+    });
   },
 
-  /* Adjust individual unit via scroll/touch */
+  setSelectedBreak: (breakType) => {
+    if (breakType !== "shortBreak" && breakType !== "longBreak") return;
+    set({ selectedBreak: breakType });
+  },
+
   adjustUnit: (unit, delta) => {
     if (get().isRunning) return;
-    
+
     let h = Math.floor(get().timeLeft / 3600);
     let m = Math.floor((get().timeLeft % 3600) / 60);
     let s = get().timeLeft % 60;
@@ -55,54 +83,90 @@ const useTimerStore = create((set, get) => ({
     }
   },
 
-  start: () => {
-    if (get().isRunning) return;
-    const ref = setInterval(() => {
-      const { timeLeft, mode, sessionsCompleted, minutesFocused } = get();
-      if (timeLeft <= 0) {
-        get()._clearInterval();
-        const newSessions = mode === "focus" ? sessionsCompleted + 1 : sessionsCompleted;
-        const addedMinutes = mode === "focus" ? Math.floor(get().focusDuration / 60) : 0;
-        set({
-          isRunning: false,
-          sessionsCompleted: Math.min(newSessions, TARGET_SESSIONS),
-          minutesFocused: minutesFocused + addedMinutes,
-          timeLeft: 0,
-        });
-        return;
-      }
-      set({ timeLeft: timeLeft - 1 });
-    }, 1000);
-    set({ isRunning: true, intervalRef: ref });
-  },
+  /* Timer Countdown Engine */
+    start: () => {
+      if (get().isRunning) return;
+
+      const ref = setInterval(() => {
+        const { timeLeft, mode, selectedBreak, sessionsCompleted, minutesFocused, focusDuration } = get();
+
+        if (timeLeft <= 1) {
+          get()._clearInterval();
+
+          // 🔊 Play chime ONCE on completion
+          playAlarmSound();
+
+          if (mode === "focus") {
+            // Flow: Focus Done -> Transition & Auto-Start Break
+            const newSessions = sessionsCompleted + 1;
+            const addedMinutes = Math.floor(focusDuration / 60);
+
+            set({
+              sessionsCompleted: Math.min(newSessions, TARGET_SESSIONS),
+              minutesFocused: minutesFocused + addedMinutes,
+              mode: selectedBreak,
+              timeLeft: PRESETS[selectedBreak],
+              isRunning: false,
+            });
+
+            // 🚀 Auto-start break session
+            get().start();
+          } else {
+            // Flow: Break Done -> Return to Focus (Paused)
+            set({
+              mode: "focus",
+              timeLeft: focusDuration,
+              isRunning: false,
+            });
+          }
+          return;
+        }
+
+        set({ timeLeft: timeLeft - 1 });
+      }, 1000);
+
+      set({ isRunning: true, intervalRef: ref });
+    },
 
   pause: () => {
     get()._clearInterval();
+    stopAlarmSound();
     set({ isRunning: false });
   },
 
-  /* Skip to next session/break */
   skip: () => {
     get()._clearInterval();
-    const currentMode = get().mode;
-    if (currentMode === "focus") {
-      const nextBreak = (get().sessionsCompleted + 1) % TARGET_SESSIONS === 0 ? "longBreak" : "shortBreak";
-      get().setMode(nextBreak);
+    stopAlarmSound();
+    const { mode, selectedBreak, focusDuration } = get();
+
+    if (mode === "focus") {
+      set({
+        mode: selectedBreak,
+        timeLeft: PRESETS[selectedBreak],
+        isRunning: false,
+      });
     } else {
-      get().setMode("focus");
+      set({
+        mode: "focus",
+        timeLeft: focusDuration,
+        isRunning: false,
+      });
     }
   },
 
   reset: () => {
     get()._clearInterval();
+    stopAlarmSound();
     const timeLeft = get().mode === "focus" ? get().focusDuration : PRESETS[get().mode];
     set({ timeLeft, isRunning: false });
   },
 
   resetAll: () => {
     get()._clearInterval();
+    stopAlarmSound();
     set({
       mode: "focus",
+      selectedBreak: "shortBreak",
       timeLeft: PRESETS.focus,
       focusDuration: PRESETS.focus,
       isRunning: false,
@@ -111,7 +175,6 @@ const useTimerStore = create((set, get) => ({
     });
   },
 
-  /* ── Internal ── */
   _clearInterval: () => {
     const { intervalRef } = get();
     if (intervalRef) clearInterval(intervalRef);

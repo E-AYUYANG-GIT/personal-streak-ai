@@ -24,14 +24,6 @@ return (
         </button>
       </div>
 
-      {/* TEMPORARILY REMOVED TEXTAREA
-      <textarea
-        className="journal-textarea"
-        value={journalText}
-        onChange={(e) => setJournalText(e.target.value)}
-        placeholder="Today's thoughts…"
-      />
-      */}
     </div>
   );
 }
