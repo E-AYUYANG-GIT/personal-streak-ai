@@ -27,17 +27,7 @@ export default function TaskSidebar({ tasks: propTasks }) {
   return (
     <aside className="tp-sidebar">
       <AvatarCard name="Elizar" />
-
       <ProgressPanel     completed={completed} total={total} />
-
-      <div className="card tp-focus">
-        <p className="tp-focus-text">
-          Small steps everyday lead to big results.
-        </p>
-        <div className="tp-focus-plant">🌱</div>
-      </div>
-
-      <div className="tp-greeting">Good morning, Elizar! ☀️</div>
     </aside>
   );
 }

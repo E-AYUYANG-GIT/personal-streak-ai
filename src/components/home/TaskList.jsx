@@ -1,9 +1,25 @@
-import { Plus, CheckCircle2, Clock, CheckSquare } from "lucide-react";
-import { CATEGORIES } from "../../lib/constants";
-import useTasksStore from "../../store/tasksStore";
+// TaskList.jsx
+import React, { useState } from 'react';
+import { Plus, CheckCircle2, Clock, CheckSquare, Trash2 } from 'lucide-react';
+import { CATEGORIES } from '../../lib/constants';
+import useTasksStore from '../../store/tasksStore';
+import AddTaskModal from '../modals/AddTaskModal';
 
 export default function TaskList() {
-  const { tasks, toggleTask } = useTasksStore();
+  const { tasks, toggleTask, addTask, deleteTask } = useTasksStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddTask = (newTask) => {
+    if (addTask) {
+      addTask(newTask);
+    }
+  };
+
+  const handleDelete = (e, taskId, isCompleted) => {
+    e.stopPropagation(); // Prevents toggling task completion when clicking delete
+    if (isCompleted) return; // Guard clause: block deletion if task is completed
+    deleteTask(taskId);
+  };
 
   return (
     <>
@@ -13,64 +29,78 @@ export default function TaskList() {
           Today's Tasks
         </div>
 
-        <button className="add-task-btn">
+        <button className="add-task-btn" onClick={() => setIsModalOpen(true)}>
           <Plus size={14} />
           Add Task
         </button>
       </div>
 
       <div className="task-list">
-        {tasks.map(
-          ({ id, title, subtitle, time, category, completed, }) => {
-            const cat = CATEGORIES.find((c) => c.key === category);
-            const Icon = cat?.icon;
+        {tasks.map((task) => {
+          const { id, title, subtitle, time, categoryId, category, completed } = task;
 
-            return (
-              <div
-                key={id}
-                className={`task-item${completed ? " done" : ""}`}
-                onClick={() => toggleTask(id)}
-              >
-                {/* Checkbox */}
-                <div className={`task-cb${completed ? " checked" : ""}`}>
-                  {completed && <CheckCircle2 size={16} color="#fff" />}
-                </div>
+          // Support both categoryId and category properties
+          const catId = categoryId || category;
+          const cat = CATEGORIES.find((c) => c.id === catId);
+          const Icon = cat?.icon;
 
-                {/* Category Icon */}
-                <div
-                  className="task-icon-wrap"
-                  style={{ background: cat?.bg ?? "#F3F4F6" }}
-                >
-                  {Icon && (
-                    <Icon
-                      size={18}
-                      color={cat?.color ?? "#9CA3AF"}
-                    />
-                  )}
-                </div>
-
-                {/* Task Body */}
-                <div className="task-body">
-                  <p className={`task-name${completed ? " done" : ""}`}>
-                    {title}
-                  </p>
-                  <p className="task-hint">{subtitle}</p>
-                </div>
-
-                {/* Time / Completed */}
-                {completed ? (
-                  <span className="done-badge">Completed</span>
-                ) : (
-                  <div className="time-chip">
-                    <Clock size={11} color="#9CA3AF" />
-                    {time}
-                  </div>
-                )}
+          return (
+            <div
+              key={id}
+              className={`task-item${completed ? ' done' : ''}`}
+              onClick={() => toggleTask(id)}
+            >
+              {/* Checkbox */}
+              <div className={`task-cb${completed ? ' checked' : ''}`}>
+                {completed && <CheckCircle2 size={16} color="#fff" />}
               </div>
-            );
-          }
-        )}
+
+              {/* Category Icon */}
+              <div
+                className="task-icon-wrap"
+                style={{ background: cat?.bg ?? '#F3F4F6' }}
+              >
+                {Icon && <Icon size={18} color={cat?.color ?? '#9CA3AF'} />}
+              </div>
+
+              {/* Task Body */}
+              <div className="task-body">
+                <p className={`task-name${completed ? ' done' : ''}`}>
+                  {title}
+                </p>
+                <p className="task-hint">{subtitle}</p>
+              </div>
+
+              {/* Time / Completed */}
+              {completed ? (
+                <span className="done-badge">Completed</span>
+              ) : (
+                <div className="time-chip">
+                  <Clock size={11} color="#9CA3AF" />
+                  {time}
+                </div>
+              )}
+
+              {/* Delete Button (Far Right) */}
+              <button
+                type="button"
+                className={`task-delete-btn${completed ? ' disabled' : ''}`}
+                onClick={(e) => handleDelete(e, id, completed)}
+                disabled={completed}
+                title={completed ? "Completed task cannot be deleted" : "Delete task"}
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
+          );
+        })}
       </div>
+
+      <AddTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAddTask={handleAddTask}
+      />
     </>
   );
 }

@@ -24,8 +24,7 @@ export default function ProgressCard({ completed, total }) {
       </div>
       <div className="pill-row">
         {Array.from({ length: total }).map((_, i) => (
-          <div key={i} className={`pill ${i < completed ? "pill-done" : "pill-empty"}`} style={{ transitionDelay: `${i * 70}ms`, }}
-/>
+          <div key={i} className={`pill ${i < completed ? "pill-done" : "pill-empty"}`} style={{ transitionDelay: `${i * 70}ms`, }}/>
         ))}
       </div>
     </div>

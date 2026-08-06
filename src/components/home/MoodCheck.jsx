@@ -9,14 +9,14 @@ export default function MoodCheck() {
       <p className="section-label">Mood Check</p>
       <p className="section-sub">How are you feeling today?</p>
       <div className="mood-row">
-        {MOODS.map((emoji, i) => (
+        {MOODS.map((mood) => (
           <button
-            key={i}
-            className={`mood-btn${selectedMood === i ? " active" : ""}`}
-            onClick={() => setSelectedMood(i)}
-            aria-label={`Mood ${i + 1}`}
+            key={mood.value}
+            className={`mood-btn${selectedMood === mood.value ? " active" : ""}`}
+            onClick={() => setSelectedMood(mood.value)}
+            aria-label={mood.label}
           >
-            {emoji}
+            {mood.emoji}
           </button>
         ))}
       </div>

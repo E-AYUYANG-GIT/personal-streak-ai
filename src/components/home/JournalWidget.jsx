@@ -1,5 +1,5 @@
 import useUIStore from "../../store/uiStore";
-import bookImg from "../../../public/book.png"
+import bookImg from "../../assets/book.png"
 export default function JournalWidget({ onOpenJournal }) {
 const { journalText, setJournalText } = useUIStore();
 
@@ -24,14 +24,6 @@ return (
         </button>
       </div>
 
-      {/* TEMPORARILY REMOVED TEXTAREA
-      <textarea
-        className="journal-textarea"
-        value={journalText}
-        onChange={(e) => setJournalText(e.target.value)}
-        placeholder="Today's thoughts…"
-      />
-      */}
     </div>
   );
 }
